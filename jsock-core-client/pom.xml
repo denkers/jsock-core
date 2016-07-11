@@ -12,34 +12,10 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.synthetica</groupId>
-			<artifactId>syntheticalib</artifactId>
-			<version>1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.synthetica</groupId>
-			<artifactId>syntheticaAluOxidelib</artifactId>
-			<version>1.0</version>
-		</dependency>
-
 		 <dependency>
 		  	<groupId>com.kyleruss.jsockchat</groupId>
 			<artifactId>jsockchat-commons</artifactId>
 			<version>1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.miglayout</groupId>
-			<artifactId>miglayout</artifactId>
-			<version>3.7.3.1</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.swinglabs</groupId>
-			<artifactId>swingx</artifactId>
-			<version>1.6.1</version>
 		</dependency>
 	</dependencies>
 	

@@ -12,18 +12,6 @@
 	</properties>
 
 	<dependencies>
-		<dependency>
-			<groupId>com.synthetica</groupId>
-			<artifactId>syntheticalib</artifactId>
-			<version>1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.synthetica</groupId>
-			<artifactId>syntheticaAluOxidelib</artifactId>
-			<version>1.0</version>
-		</dependency>
-
 		 <dependency>
 		   	<groupId>com.kyleruss.jsock</groupId>
 			<artifactId>commons</artifactId>
@@ -41,12 +29,6 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.8.11.2</version>
 		</dependency>	
-
-		<dependency>
-			<groupId>com.miglayout</groupId>
-			<artifactId>miglayout</artifactId>
-			<version>3.7.3.1</version>
-		</dependency>
 	</dependencies>
 
 	<build>
