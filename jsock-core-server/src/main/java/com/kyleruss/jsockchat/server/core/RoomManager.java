@@ -13,10 +13,6 @@ import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
 import com.kyleruss.jsockchat.commons.room.Room;
 import com.kyleruss.jsockchat.commons.updatebean.RoomsUpdateBean;
-import com.kyleruss.jsockchat.commons.user.IUser;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
 import com.kyleruss.jsockchat.server.io.ServerMessageSender;
 import com.kyleruss.jsockchat.server.io.UserSocket;
 import java.io.File;
@@ -52,7 +48,7 @@ public final class RoomManager extends AbstractManager<String, Room>
      * @param roomName The name of the room/key in data 
      * @return A list of users in this room
      */
-    public synchronized List<IUser> getUsersInRoom(String roomName)
+    public synchronized List<String> getUsersInRoom(String roomName)
     {
         Room room           =   get(roomName);
         
@@ -66,22 +62,21 @@ public final class RoomManager extends AbstractManager<String, Room>
      * @param message The message to send users in the room
      * @param exclusions Users in the room to ignore
      */
-    public synchronized void sendMessageToRoom(String roomName, Message message, List<IUser> exclusions)
+    public synchronized void sendMessageToRoom(String roomName, Message message, List<String> exclusions)
     {
         if(!find(roomName))
             return;
         
-        List<IUser> roomUsers   =   getUsersInRoom(roomName);
+        List<String> roomUsers   =   getUsersInRoom(roomName);
         
-        for(IUser user : roomUsers)
+        for(String user : roomUsers)
         {
             if(exclusions != null && exclusions.contains(user))
                 continue;
             
             try
             {
-                String username                 =   user.getUsername();
-                UserSocket userSocket           =   SocketManager.getInstance().get(username);
+                UserSocket userSocket           =   SocketManager.getInstance().get(user);
                 MessageQueueItem messageItem    =   new MessageQueueItem(userSocket.getSocketOutputStream(), message);
                 ServerMessageSender.getInstance().addMessage(messageItem);
             }
@@ -98,10 +93,10 @@ public final class RoomManager extends AbstractManager<String, Room>
      * @param excludedUsers The users to exclude
      * @return A list of users that should be ignored
      */
-    public static List<IUser> createExclusions(IUser... excludedUsers)
+    public static List<String> createExclusions(String... excludedUsers)
     {
-        List<IUser> exclusions  =   new ArrayList<>();
-        for(IUser user : excludedUsers)
+        List<String> exclusions  =   new ArrayList<>();
+        for(String user : excludedUsers)
             exclusions.add(user);
         
         return exclusions;
@@ -113,33 +108,31 @@ public final class RoomManager extends AbstractManager<String, Room>
      * @param user The user to remove from the room
      * @param roomName The room to remove user from
      */
-    public synchronized void leaveRoom(IUser user, String roomName)
+    public synchronized void leaveRoom(String user, String roomName)
     {
         if(find(roomName))
         {
-            LoggingList.sendLogMessage(new LogMessage("[Room manager] User '" + user.getUsername() + "' has left room '" + roomName + "'", 
-            AppResources.getInstance().getDcImage()));
+            LoggingManager.log("[Room manager] User '" + user + "' has left room '" + roomName + "'");
             
-            user.getCurrentRooms().remove(roomName);
+            //user.getCurrentRooms().remove(roomName);
             Room room   =   get(roomName);
             room.leaveRoom(user);
             
             if(room.isEmpty() && !room.isFixed())
             {
                 data.remove(roomName);
-                LoggingList.sendLogMessage(new LogMessage("[Room manager] Room '" + roomName + "' is empty, destroying...", AppResources.getInstance().getServerOkImage()));
+                LoggingManager.log("[Room manager] Room '" + roomName + "' is empty, destroying...");
             }
             
             else
             {
                 DisconnectMsgBean bean      =   new DisconnectMsgBean(DisconnectMsgBean.ROOM_LEAVE);
                 bean.setRoom(room.getRoomName());
-                RequestMessage request      =   new RequestMessage(user.getUsername(), bean);
+                RequestMessage request      =   new RequestMessage(user, bean);
                 ResponseMessage response    =   new ResponseMessage(request);
                 sendMessageToRoom(room.getRoomName(), response, createExclusions(user));
                 
-                LoggingList.sendLogMessage(new LogMessage("[Room manager] Notified witnesses of room '" + roomName + "' that user '" + user.getUsername() + "' has left", 
-                AppResources.getInstance().getBroadcastImage()));
+                LoggingManager.log("[Room manager] Notified witnesses of room '" + roomName + "' that user '" + user + "' has left");
             }
         }
     }
@@ -148,9 +141,17 @@ public final class RoomManager extends AbstractManager<String, Room>
      * Removes the user from all rooms its involved in
      * @param user The user that's going to leave all their rooms
      */
-    public synchronized void leaveAllRooms(IUser user)
+    public synchronized void leaveAllRooms(String user)
     {
-        Object[] currentRooms   =    user.getCurrentRooms().toArray();
+        List<String> usersRoomList  =   new ArrayList<>();
+        for(Room room : data.values())
+        {
+            if(room.hasUser(user))
+                usersRoomList.add(room.getRoomName());
+        }
+        
+        Object[] currentRooms   =    usersRoomList.toArray();
+        
        
         for(Object room : currentRooms)
             leaveRoom(user, room.toString());
@@ -180,13 +181,13 @@ public final class RoomManager extends AbstractManager<String, Room>
             
             serverNodeName  =   doc.getElementsByTagName("rootRoom").item(0).getTextContent();
             
-            LoggingList.sendLogMessage(new LogMessage("[Room manager] rooms.xml has been initialized", AppResources.getInstance().getServerOkImage()));
+            LoggingManager.log("[Room manager] rooms.xml has been initialized");
         }
         
         catch(IOException | ParserConfigurationException | SAXException e)
         {
             System.out.println("[RoomManager@initFixedRooms]: " + e.getMessage());
-            LoggingList.sendLogMessage(new LogMessage("[Room manager] Failed to initialize rooms.xml", AppResources.getInstance().getServerBadImage()));
+            LoggingManager.log("[Room manager] Failed to initialize rooms.xml");
         }
     }
     
