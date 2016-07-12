@@ -6,7 +6,6 @@
 
 package com.kyleruss.jsockchat.commons.room;
 
-import com.kyleruss.jsockchat.commons.user.IUser;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ import java.util.List;
  */
 public class Room implements IRoom
 {
-    private List<IUser> userList;
+    private List<String> userList;
     private final String name;
     private final String password;
     private final boolean isFixed;
@@ -32,7 +31,7 @@ public class Room implements IRoom
     }
     
     @Override
-    public List<IUser> getUserList()
+    public List<String> getUserList()
     {
         return userList;
     }
@@ -50,25 +49,25 @@ public class Room implements IRoom
     }
     
     @Override
-    public boolean hasUser(IUser user)
+    public boolean hasUser(String user)
     {
         return userList.contains(user);
     }
 
     @Override
-    public void setUserList(List<IUser> userList) 
+    public void setUserList(List<String> userList) 
     {
         this.userList   =   userList;
     }
 
     @Override
-    public void leaveRoom(IUser username) 
+    public void leaveRoom(String username) 
     {
         userList.remove(username);
     }
 
     @Override
-    public boolean joinRoom(IUser user)
+    public boolean joinRoom(String user)
     {
         if(hasUser(user)) return false;
         else return userList.add(user);
