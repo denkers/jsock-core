@@ -6,11 +6,8 @@
 
 package com.kyleruss.jsockchat.server.io;
 
+import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.ServerConfig;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
-import com.kyleruss.jsockchat.server.gui.ServerStatusPanel;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -41,14 +38,12 @@ public final class MessageServer extends SyncedServer
             serverSocket    =   new ServerSocket(ServerConfig.MESSAGE_SERVER_PORT);
             serverSocket.setSoTimeout(ServerConfig.MESSAGE_SERVER_TIMEOUT);
             
-            LoggingList.sendLogMessage(new LogMessage("[Message Server] Initialized sever socket on port " + ServerConfig.MESSAGE_SERVER_PORT, 
-            AppResources.getInstance().getServerOkImage()));
+            LoggingManager.log("[Message Server] Initialized sever socket on port " + ServerConfig.MESSAGE_SERVER_PORT);
         }
         
         catch(IOException e)
         {
-            LoggingList.sendLogMessage(new LogMessage("[Message Server] Failed to initialize sever socket on port " + ServerConfig.MESSAGE_SERVER_PORT, 
-            AppResources.getInstance().getServerOkImage()));
+            LoggingManager.log("[Message Server] Failed to initialize sever socket on port " + ServerConfig.MESSAGE_SERVER_PORT);
         }
     }
     
@@ -117,10 +112,8 @@ public final class MessageServer extends SyncedServer
         if(isServing == serving) return;
         
         super.setServingSync(serving);
-        ServerStatusPanel.getInstance().setServerStatus(serving, ServerConfig.MESSAGE_LISTEN_SERVER_CODE);
         
-        LoggingList.sendLogMessage(new LogMessage("[Message Server] Server has " + (serving? "resumed" : "paused"), 
-            AppResources.getInstance().getServerOkImage()));
+        LoggingManager.log("[Message Server] Server has " + (serving? "resumed" : "paused"));
     }
     
     public static MessageServer getInstance()

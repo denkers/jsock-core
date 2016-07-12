@@ -44,6 +44,11 @@ public class AbstractManager<K, V>
         return data.values();   
     }
     
+    public synchronized Collection<K> getDataKeys()
+    {
+        return data.keySet();
+    }
+    
     public synchronized boolean find(K name)
     {
         return data.containsKey(name);

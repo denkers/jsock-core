@@ -8,17 +8,11 @@ package com.kyleruss.jsockchat.server.io;
 
 import com.kyleruss.jsockchat.commons.room.Room;
 import com.kyleruss.jsockchat.commons.updatebean.UpdateBeanDump;
-import com.kyleruss.jsockchat.commons.user.IUser;
+import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.RoomManager;
 import com.kyleruss.jsockchat.server.core.ServerConfig;
 import com.kyleruss.jsockchat.server.core.ServerManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
-import com.kyleruss.jsockchat.server.core.UserManager;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
-import com.kyleruss.jsockchat.server.gui.ServerPanel;
-import com.kyleruss.jsockchat.server.gui.ServerStatusPanel;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -53,9 +47,7 @@ public class UpdateBroadcastServer extends SyncedServer
         try
         {
             socket  =   new DatagramSocket();
-            
-            LoggingList.sendLogMessage(new LogMessage("[Update Broadcast Server] Sending updates to online users every " + (ServerConfig.BROADCAST_DELAY / 1000) + " second(s)", 
-            AppResources.getInstance().getUpdateImage()));
+            LoggingManager.log("[Update Broadcast Server] Sending updates to online users every " + (ServerConfig.BROADCAST_DELAY / 1000) + " second(s)");
         }
         
         catch(SocketException e)
@@ -80,9 +72,9 @@ public class UpdateBroadcastServer extends SyncedServer
      * @param updates The created update dump
      * @param user The user to send the update dump to
      */
-    protected synchronized void sendUpdates(UpdateBeanDump updates, IUser user) throws IOException
+    protected synchronized void sendUpdates(UpdateBeanDump updates, String user) throws IOException
     {
-        UserSocket userSock             =       SocketManager.getInstance().get(user.getUsername());
+        UserSocket userSock             =       SocketManager.getInstance().get(user);
         int port                        =       userSock.getUdpPort();
         if(port == -1) return;
         
@@ -100,10 +92,9 @@ public class UpdateBroadcastServer extends SyncedServer
     
     protected synchronized void updateUsers()
     {
-        UserManager userManager     =   UserManager.getInstance();
-        Collection<IUser> users     =   userManager.getDataValues();
+        Collection<String> users     =   SocketManager.getInstance().getDataKeys();
         
-        for(IUser user : users)
+        for(String user : users)
         {
             UpdateBeanDump updates   =   ServerManager.getInstance().prepareUpdates(user);
             

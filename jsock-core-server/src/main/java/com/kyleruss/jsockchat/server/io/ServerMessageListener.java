@@ -20,11 +20,8 @@ import com.kyleruss.jsockchat.commons.message.RegisterMsgBean;
 import com.kyleruss.jsockchat.commons.message.RemoveFriendMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestFriendMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
+import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
-import com.kyleruss.jsockchat.server.core.UserManager;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
 import com.kyleruss.jsockchat.server.message.AuthMessageHandler;
 import com.kyleruss.jsockchat.server.message.BroadcastMessageHandler;
 import com.kyleruss.jsockchat.server.message.CreateRoomMessageHandler;
@@ -71,7 +68,7 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
             UserSocket userSocket       =   new UserSocket(socket);
             sockManager.add(address, userSocket);
             servingUser =   address;
-            LoggingList.sendLogMessage(new LogMessage("[Message Server] Serving new client '" + address + "'", AppResources.getInstance().getAddImage()));
+            LoggingManager.log("[Message Server] Serving new client '");
         }
     }
     
@@ -179,11 +176,9 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
         try
         {
             if(inputStream != null) inputStream.close();
-            if(UserManager.getInstance().find(servingUser))
-                UserManager.getInstance().clientExit(UserManager.getInstance().get(servingUser));
             
-            else if(SocketManager.getInstance().find(servingUser))
-                SocketManager.getInstance().cleanUp(servingUser);
+            if(SocketManager.getInstance().find(servingUser))
+                SocketManager.getInstance().clientExit(servingUser);
             
             else socket.close();
         }

@@ -7,13 +7,9 @@
 package com.kyleruss.jsockchat.server.io;
 
 import com.kyleruss.jsockchat.commons.io.MessageSender;
-import com.kyleruss.jsockchat.commons.user.IUser;
+import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.ServerConfig;
-import com.kyleruss.jsockchat.server.core.UserManager;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
-import com.kyleruss.jsockchat.server.gui.ServerStatusPanel;
+import com.kyleruss.jsockchat.server.core.SocketManager;
 
 /**
  * A server for sending messages in a queue
@@ -61,10 +57,8 @@ public class ServerMessageSender extends MessageSender
         isSending  =   sending;
         notify();
         
-        ServerStatusPanel.getInstance().setServerStatus(sending, ServerConfig.MESSAGE_SEND_SERVER_CODE);
         
-        LoggingList.sendLogMessage(new LogMessage("[Message Send Server] Server has " + (sending? "resumed" : "paused"), 
-        AppResources.getInstance().getServerOkImage()));
+        LoggingManager.log("[Message Send Server] Server has " + (sending? "resumed" : "paused"));
     }
     
     /**
@@ -74,8 +68,7 @@ public class ServerMessageSender extends MessageSender
     @Override
     protected void cleanUp(String source)
     {
-        IUser user  =   UserManager.getInstance().get(source);
-        UserManager.getInstance().clientExit(user);
+        SocketManager.getInstance().clientExit(source);
     }
     
     @Override
