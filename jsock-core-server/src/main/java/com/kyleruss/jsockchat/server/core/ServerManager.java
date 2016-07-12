@@ -6,14 +6,8 @@
 
 package com.kyleruss.jsockchat.server.core;
 
-import com.kyleruss.jsockchat.commons.updatebean.FriendsUpdateBean;
 import com.kyleruss.jsockchat.commons.updatebean.RoomsUpdateBean;
 import com.kyleruss.jsockchat.commons.updatebean.UpdateBeanDump;
-import com.kyleruss.jsockchat.commons.updatebean.UsersUpdateBean;
-import com.kyleruss.jsockchat.commons.user.IUser;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
 import com.kyleruss.jsockchat.server.io.MessageServer;
 import com.kyleruss.jsockchat.server.io.ServerMessageSender;
 import com.kyleruss.jsockchat.server.io.UpdateBroadcastServer;
@@ -35,15 +29,15 @@ public class ServerManager
     {
         MessageServer messageServer     =   MessageServer.getInstance();
         messageServer.start();
-        LoggingList.sendLogMessage(new LogMessage("[Server manager] Started Message server", AppResources.getInstance().getServerOkImage()));
+        LoggingManager.log("[Server manager] Started Message server");
         
         ServerMessageSender sendServer  =   ServerMessageSender.getInstance();
         sendServer.start();
-        LoggingList.sendLogMessage(new LogMessage("[Server manager] Started Message broadcast server", AppResources.getInstance().getServerOkImage()));
+        LoggingManager.log("[Server manager] Started Message broadcast server");
         
         UpdateBroadcastServer broadcastServer =   UpdateBroadcastServer.getInstance();
         broadcastServer.start();
-        LoggingList.sendLogMessage(new LogMessage("[Server manager] Started Update broadcast server", AppResources.getInstance().getServerOkImage()));
+        LoggingManager.log("[Server manager] Started Update broadcast server");
     }
     
     /**
@@ -51,12 +45,10 @@ public class ServerManager
      * @param user The user who updates will be prepared for
      * @return A update dump from the created beans
      */
-    public UpdateBeanDump prepareUpdates(IUser user)
+    public UpdateBeanDump prepareUpdates(String user)
     {
         RoomsUpdateBean roomsBean       =   RoomManager.getInstance().createRoomsBean();
-        FriendsUpdateBean freindsBean   =   UserManager.getInstance().createFriendsBean(user.getUsername());
-        UsersUpdateBean usersBean       =   UserManager.getInstance().createUsersBean();
-        UpdateBeanDump beanDump         =   new UpdateBeanDump(freindsBean, roomsBean, usersBean);
+        UpdateBeanDump beanDump         =   new UpdateBeanDump(roomsBean);
         
         return beanDump;
     }
@@ -69,8 +61,6 @@ public class ServerManager
     
     public static void main(String[] args)
     {
-        ServerGUIManager guiManager   =   ServerGUIManager.getInstance();
-        guiManager.display();
         ServerManager manager   =   getInstance();
         manager.startServers();
     }
