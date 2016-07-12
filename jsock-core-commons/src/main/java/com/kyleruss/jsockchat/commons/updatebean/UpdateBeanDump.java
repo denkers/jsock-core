@@ -15,38 +15,23 @@ import java.util.Date;
  */
 public class UpdateBeanDump implements Serializable
 {
-    private FriendsUpdateBean friendsBean;
-    
     private RoomsUpdateBean roomsBean;
     
-    private UsersUpdateBean usersBean;
     
     private Date updateTime;
     
     
     public UpdateBeanDump()
     {
-        this(new FriendsUpdateBean(), new RoomsUpdateBean(), new UsersUpdateBean());
+        this(new RoomsUpdateBean());
     }
     
-    public UpdateBeanDump(FriendsUpdateBean friendsBean, RoomsUpdateBean roomsBean, UsersUpdateBean usersBean)
+    public UpdateBeanDump(RoomsUpdateBean roomsBean)
     {
         updateTime          =   new Date();
-        this.friendsBean    =   friendsBean;
         this.roomsBean      =   roomsBean;
-        this.usersBean      =   usersBean;
     }
     
-    public FriendsUpdateBean getFriendsBean() 
-    {
-        return friendsBean;
-    }
-
-    public void setFriendsBean(FriendsUpdateBean friendsBean)
-    {
-        this.friendsBean = friendsBean;
-    }
-
     public RoomsUpdateBean getRoomsBean()
     {
         return roomsBean;
@@ -55,16 +40,6 @@ public class UpdateBeanDump implements Serializable
     public void setRoomsBean(RoomsUpdateBean roomsBean)
     {
         this.roomsBean = roomsBean;
-    }
-    
-    public UsersUpdateBean getUsersBean()
-    {
-        return usersBean;
-    }
-    
-    public void setUsersBean(UsersUpdateBean usersBean)
-    {
-        this.usersBean  =   usersBean;
     }
     
     public Date getUpdateTime()
