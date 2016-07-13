@@ -6,10 +6,8 @@
 
 package com.kyleruss.jsockchat.server.io;
 
-import com.kyleruss.jsockchat.commons.room.Room;
 import com.kyleruss.jsockchat.commons.updatebean.UpdateBeanDump;
 import com.kyleruss.jsockchat.server.core.LoggingManager;
-import com.kyleruss.jsockchat.server.core.RoomManager;
 import com.kyleruss.jsockchat.server.core.ServerConfig;
 import com.kyleruss.jsockchat.server.core.ServerManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
@@ -101,18 +99,9 @@ public class UpdateBroadcastServer extends SyncedServer
             try { sendUpdates(updates, user); } 
             catch(IOException e)
             {
-                LoggingList.sendLogMessage(new LogMessage("[Update Broadcast Server] Failed to send updates to user '" + user.getUsername() + "'",
-                AppResources.getInstance().getServerBadImage()));
+                LoggingManager.log("[Update Broadcast Server] Failed to send updates to user '" + user + "'");
             }
         }
-    }
-    
-    protected synchronized void updateServer()
-    {
-        List<IUser> userList    =   new ArrayList<>(UserManager.getInstance().getDataValues());
-        List<Room> roomList     =   new ArrayList<>(RoomManager.getInstance().getDataValues());
-        ServerPanel.getInstance().getUserList().initUsers(userList);
-        ServerPanel.getInstance().getRoomTree().initRooms(roomList);
     }
     
     @Override
@@ -121,10 +110,8 @@ public class UpdateBroadcastServer extends SyncedServer
         if(isServing == serving) return;
         
         super.setServingSync(serving);
-        ServerStatusPanel.getInstance().setServerStatus(serving, ServerConfig.UPDATE_BROADCAST_SERVER_CODE);
         
-        LoggingList.sendLogMessage(new LogMessage("[Update broadcast Server] Server has " + (serving? "resumed" : "paused"), 
-        AppResources.getInstance().getServerOkImage()));
+        LoggingManager.log("[Update broadcast Server] Server has " + (serving? "resumed" : "paused")); 
     }
 
     @Override
@@ -133,7 +120,6 @@ public class UpdateBroadcastServer extends SyncedServer
         try
         {
             wait(ServerConfig.BROADCAST_DELAY);
-            updateServer();
             updateUsers();
         }
         
