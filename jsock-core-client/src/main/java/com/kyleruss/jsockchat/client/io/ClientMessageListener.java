@@ -7,18 +7,7 @@
 package com.kyleruss.jsockchat.client.io;
 
 import com.kyleruss.jsockchat.client.core.SocketManager;
-import com.kyleruss.jsockchat.client.core.UserManager;
-import com.kyleruss.jsockchat.client.message.AcceptFriendMessageHandler;
-import com.kyleruss.jsockchat.client.message.AuthMessageHandler;
-import com.kyleruss.jsockchat.client.message.BroadcastMessageHandler;
 import com.kyleruss.jsockchat.client.message.ClientMessageHandler;
-import com.kyleruss.jsockchat.client.message.CreateRoomMessageHandler;
-import com.kyleruss.jsockchat.client.message.DisconnectMessageHandler;
-import com.kyleruss.jsockchat.client.message.JoinRoomMessageHandler;
-import com.kyleruss.jsockchat.client.message.PrivateMessageHandler;
-import com.kyleruss.jsockchat.client.message.RegisterMessageHandler;
-import com.kyleruss.jsockchat.client.message.RemoveFriendMessageHandler;
-import com.kyleruss.jsockchat.client.message.RequestFriendMessageHandler;
 import com.kyleruss.jsockchat.commons.io.MessageListener;
 import com.kyleruss.jsockchat.commons.message.AcceptFriendMsgBean;
 import com.kyleruss.jsockchat.commons.message.AuthMsgBean;
@@ -55,36 +44,6 @@ public class ClientMessageListener extends MessageListener<ResponseMessage>
     private ClientMessageHandler getHandler(MessageBean bean)
     {
         ClientMessageHandler handler    =   null;   
-        
-        if(bean instanceof AuthMsgBean)
-            handler     =   new AuthMessageHandler();
-        
-        else if(bean instanceof RegisterMsgBean)
-            handler     =   new RegisterMessageHandler();
-        
-        else if(bean instanceof DisconnectMsgBean)
-            handler     =   new DisconnectMessageHandler();
-        
-        else if(bean instanceof JoinRoomMsgBean)
-            handler     =   new JoinRoomMessageHandler();
-        
-        else if(bean instanceof PrivateMsgBean)
-            handler     =   new PrivateMessageHandler();
-        
-        else if(bean instanceof BroadcastMsgBean)
-            handler     =   new BroadcastMessageHandler();
-        
-        else if(bean instanceof AcceptFriendMsgBean)
-            handler     =   new AcceptFriendMessageHandler();
-        
-        else if(bean instanceof CreateRoomMsgBean)
-            handler     =   new CreateRoomMessageHandler();
-        
-        else if(bean instanceof RemoveFriendMsgBean)
-            handler     =   new RemoveFriendMessageHandler();
-        
-        else if(bean instanceof RequestFriendMsgBean)
-            handler     =   new RequestFriendMessageHandler();
         
         return handler;
     }
