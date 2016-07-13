@@ -6,7 +6,6 @@
 
 package com.kyleruss.jsockchat.server.io;
 
-import com.kyleruss.jsockchat.server.message.AcceptFriendMessageHandler;
 import com.kyleruss.jsockchat.commons.io.MessageListener;
 import com.kyleruss.jsockchat.commons.message.AcceptFriendMsgBean;
 import com.kyleruss.jsockchat.commons.message.AuthMsgBean;
@@ -22,15 +21,11 @@ import com.kyleruss.jsockchat.commons.message.RequestFriendMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
-import com.kyleruss.jsockchat.server.message.AuthMessageHandler;
 import com.kyleruss.jsockchat.server.message.BroadcastMessageHandler;
 import com.kyleruss.jsockchat.server.message.CreateRoomMessageHandler;
 import com.kyleruss.jsockchat.server.message.DisconnectMessageHandler;
 import com.kyleruss.jsockchat.server.message.JoinRoomMessageHandler;
 import com.kyleruss.jsockchat.server.message.PrivateMessageHandler;
-import com.kyleruss.jsockchat.server.message.RegisterMessageHandler;
-import com.kyleruss.jsockchat.server.message.RemoveFriendMessageHandler;
-import com.kyleruss.jsockchat.server.message.RequestFriendMessageHandler;
 import com.kyleruss.jsockchat.server.message.ServerMessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -86,13 +81,8 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
     {
         ServerMessageHandler handler    =   null;
             
-        if(bean instanceof AuthMsgBean)
-            handler     =   new AuthMessageHandler(servingUser, this);
         
-        else if(bean instanceof RegisterMsgBean)
-            handler     =   new RegisterMessageHandler(servingUser);
-        
-        else if(bean instanceof DisconnectMsgBean)
+        if(bean instanceof DisconnectMsgBean)
             handler     =   new DisconnectMessageHandler();
         
         else if(bean instanceof JoinRoomMsgBean)
@@ -104,17 +94,9 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
         else if(bean instanceof BroadcastMsgBean)
             handler     =   new BroadcastMessageHandler();
         
-        else if(bean instanceof RequestFriendMsgBean)
-            handler     =   new RequestFriendMessageHandler();
-        
-        else if(bean instanceof AcceptFriendMsgBean)
-            handler     =   new AcceptFriendMessageHandler();
-        
         else if(bean instanceof CreateRoomMsgBean)
             handler     =   new CreateRoomMessageHandler();
         
-        else if(bean instanceof RemoveFriendMsgBean)
-            handler     =   new RemoveFriendMessageHandler();
         
         return handler;
     }
@@ -185,7 +167,7 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
         
         catch(IOException e)
         {
-            System.out.println("[ServerMessageListener@handleCleanup]: " + e.getMessage());
+            LoggingManager.log("[ServerMessageListener@handleCleanup]: " + e.getMessage());
         }
     }
     
