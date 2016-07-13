@@ -9,11 +9,8 @@ package com.kyleruss.jsockchat.server.message;
 import com.kyleruss.jsockchat.commons.message.PrivateMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
-import com.kyleruss.jsockchat.commons.user.IUser;
-import com.kyleruss.jsockchat.server.core.UserManager;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
+import com.kyleruss.jsockchat.server.core.LoggingManager;
+import com.kyleruss.jsockchat.server.core.SocketManager;
 import java.io.IOException;
 
 public class PrivateMessageHandler implements ServerMessageHandler
@@ -22,8 +19,7 @@ public class PrivateMessageHandler implements ServerMessageHandler
     public void serverAction(RequestMessage request) 
     {
         PrivateMsgBean bean         =   (PrivateMsgBean) request.getMessageBean();
-        UserManager userManager     =   UserManager.getInstance();
-        IUser destinationUser       =   userManager.get(bean.getDestinationUser());
+        String destinationUser      =   bean.getDestinationUser();
         String source               =   request.getUserSource();
         ResponseMessage response    =   new ResponseMessage(request);
         String destination;
@@ -43,12 +39,11 @@ public class PrivateMessageHandler implements ServerMessageHandler
         
         try 
         { 
-            userManager.sendMessageToUser(destination, response); 
+            SocketManager.getInstance().sendMessageToUser(destination, response); 
             
             if(destinationUser != null)
             {
-                LoggingList.sendLogMessage(new LogMessage("[Private message] User '" + source + "' has sent a private message to user '" + destinationUser.getUsername(), 
-                AppResources.getInstance().getPmImage()));
+                LoggingManager.log("[Private message] User '" + source + "' has sent a private message to user '" + destinationUser); 
             }
         }
         

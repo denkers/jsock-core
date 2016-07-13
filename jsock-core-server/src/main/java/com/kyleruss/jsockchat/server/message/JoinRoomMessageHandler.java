@@ -10,13 +10,11 @@ import com.kyleruss.jsockchat.commons.message.JoinRoomMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
 import com.kyleruss.jsockchat.commons.room.Room;
-import com.kyleruss.jsockchat.commons.user.IUser;
+import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.RoomManager;
-import com.kyleruss.jsockchat.server.core.UserManager;
-import com.kyleruss.jsockchat.server.gui.AppResources;
-import com.kyleruss.jsockchat.server.gui.LogMessage;
-import com.kyleruss.jsockchat.server.gui.LoggingList;
+import com.kyleruss.jsockchat.server.core.SocketManager;
 import java.io.IOException;
+import java.util.List;
 
 
 public class JoinRoomMessageHandler implements ServerMessageHandler
@@ -28,8 +26,8 @@ public class JoinRoomMessageHandler implements ServerMessageHandler
         String source               =   request.getUserSource();
         String roomName             =   bean.getRoom();
         Room room                   =   RoomManager.getInstance().get(roomName);
-        IUser user                  =   UserManager.getInstance().get(source);
         ResponseMessage response    =   new ResponseMessage(request);
+        List<String> usersRooms     =   RoomManager.getInstance().getUsersRooms(source);
 
         try 
         { 
@@ -37,14 +35,14 @@ public class JoinRoomMessageHandler implements ServerMessageHandler
             {
                 response.setStatus(false);
                 response.setDescription("Room does not exist");
-                UserManager.getInstance().sendMessageToUser(source, response);
+                SocketManager.getInstance().sendMessageToUser(source, response);
             }
             
-            else if(user.getCurrentRooms().contains(roomName) || room.hasUser(user))
+            else if(room.hasUser(source) || usersRooms.contains(roomName))
             {
                 response.setStatus(false);
                 response.setDescription("You are already connected to this room");
-                UserManager.getInstance().sendMessageToUser(source, response); 
+                SocketManager.getInstance().sendMessageToUser(source, response); 
             }
             
             else
@@ -53,27 +51,25 @@ public class JoinRoomMessageHandler implements ServerMessageHandler
                  {
                      response.setStatus(false);
                      response.setDescription("Invalid room password");
-                     UserManager.getInstance().sendMessageToUser(source, response);
+                     SocketManager.getInstance().sendMessageToUser(source, response);
                  }
                  
                  else
                  {
-                     user.getCurrentRooms().add(roomName);
-                     room.joinRoom(user);
+                     room.joinRoom(source);
                      
                      response.setStatus(true);
-                     response.setDescription(source + " (" + user.getDisplayName() + ") has joined the room");
+                     response.setDescription(source + " (" + source + ") has joined the room");
                      RoomManager.getInstance().sendMessageToRoom(roomName, response, null);
                      
-                     LoggingList.sendLogMessage(new LogMessage("[Join room] User '" + source + "' has joined room '" + roomName + "'", 
-                     AppResources.getInstance().getAddImage()));
+                     LoggingManager.log("[Join room] User '" + source + "' has joined room '" + roomName + "'");
                  }
             }
         }
         
         catch(IOException e)
         {
-            System.out.println("[JoinRoomMessageHandler@serverAction]: " + e.getMessage());
+            LoggingManager.log("[JoinRoomMessageHandler@serverAction]: " + e.getMessage());
         }
     }
 }

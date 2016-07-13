@@ -9,10 +9,8 @@ package com.kyleruss.jsockchat.server.message;
 import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
-import com.kyleruss.jsockchat.commons.user.IUser;
 import com.kyleruss.jsockchat.server.core.RoomManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
-import com.kyleruss.jsockchat.server.core.UserManager;
 import java.util.List;
 
 public class DisconnectMessageHandler implements ServerMessageHandler
@@ -23,31 +21,30 @@ public class DisconnectMessageHandler implements ServerMessageHandler
         String source               =   request.getUserSource();
         DisconnectMsgBean bean      =   (DisconnectMsgBean) request.getMessageBean();
         ResponseMessage response    =   new ResponseMessage(request);
-        IUser user                  =   UserManager.getInstance().get(source);
         RoomManager roomManager     =   RoomManager.getInstance();
         
-        response.setDescription(source + " (" + user.getDisplayName() + ") has left the room");
+        response.setDescription(source + " has left the room");
         response.setStatus(true);
         
         if(bean.getDisconnectType() == DisconnectMsgBean.ROOM_LEAVE)
         {
             String roomName   =   bean.getRoom();
-            roomManager.leaveRoom(user, roomName);
+            roomManager.leaveRoom(source, roomName);
         }
         
         else
         {
-            roomManager.leaveAllRooms(user);
+            roomManager.leaveAllRooms(source);
             
-            List<String> rooms  =   user.getCurrentRooms();
+            List<String> rooms  =   roomManager.getUsersRooms(source);
             for(String roomName : rooms)
-                roomManager.sendMessageToRoom(roomName, response, RoomManager.createExclusions(user));
+                roomManager.sendMessageToRoom(roomName, response, RoomManager.createExclusions(source));
 
             if(bean.getDisconnectType() == DisconnectMsgBean.CLIENT_CLOSE)
-                UserManager.getInstance().clientExit(user);
+                SocketManager.getInstance().clientExit(source);
             
             else
-                SocketManager.getInstance().processLogout(user.getUsername());
+                SocketManager.getInstance().processLogout(source);
         }
     }
 }

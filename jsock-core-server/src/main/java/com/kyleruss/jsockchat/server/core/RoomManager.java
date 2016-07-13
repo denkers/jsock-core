@@ -56,6 +56,18 @@ public final class RoomManager extends AbstractManager<String, Room>
         else return new ArrayList<>();
     }
     
+    public synchronized List<String> getUsersRooms(String user)
+    {
+        List<String> rooms  =   new ArrayList<>();
+        for(Room room : data.values())
+        {
+            if(room.hasUser(user))
+                rooms.add(user);
+        }
+        
+        return rooms;
+    }
+    
     /**
      * Sends the passed message to all users in the room (exception those in exclusions)
      * @param roomName The name of the room to send to
@@ -143,16 +155,9 @@ public final class RoomManager extends AbstractManager<String, Room>
      */
     public synchronized void leaveAllRooms(String user)
     {
-        List<String> usersRoomList  =   new ArrayList<>();
-        for(Room room : data.values())
-        {
-            if(room.hasUser(user))
-                usersRoomList.add(room.getRoomName());
-        }
-        
+        List<String> usersRoomList  =   getUsersRooms(user);
         Object[] currentRooms   =    usersRoomList.toArray();
         
-       
         for(Object room : currentRooms)
             leaveRoom(user, room.toString());
     }
