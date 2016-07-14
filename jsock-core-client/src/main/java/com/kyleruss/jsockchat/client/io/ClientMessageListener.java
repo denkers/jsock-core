@@ -9,17 +9,7 @@ package com.kyleruss.jsockchat.client.io;
 import com.kyleruss.jsockchat.client.core.SocketManager;
 import com.kyleruss.jsockchat.client.message.ClientMessageHandler;
 import com.kyleruss.jsockchat.commons.io.MessageListener;
-import com.kyleruss.jsockchat.commons.message.AcceptFriendMsgBean;
-import com.kyleruss.jsockchat.commons.message.AuthMsgBean;
-import com.kyleruss.jsockchat.commons.message.BroadcastMsgBean;
-import com.kyleruss.jsockchat.commons.message.CreateRoomMsgBean;
-import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
-import com.kyleruss.jsockchat.commons.message.JoinRoomMsgBean;
 import com.kyleruss.jsockchat.commons.message.MessageBean;
-import com.kyleruss.jsockchat.commons.message.PrivateMsgBean;
-import com.kyleruss.jsockchat.commons.message.RegisterMsgBean;
-import com.kyleruss.jsockchat.commons.message.RemoveFriendMsgBean;
-import com.kyleruss.jsockchat.commons.message.RequestFriendMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
 import com.kyleruss.jsockchat.commons.user.IUser;
@@ -58,12 +48,12 @@ public class ClientMessageListener extends MessageListener<ResponseMessage>
     {
         RequestMessage request          =   response.getRequestMessage();
         MessageBean bean                =   request.getMessageBean();
-        IUser user                      =   UserManager.getInstance().getActiveUser();
+        String user                     =   SocketManager.getInstance().getActiveUser();
         ClientMessageHandler handler    =   getHandler(bean);
         
         if(handler != null)
         {
-            if(user == null || !request.isWitness(user.getUsername()))
+            if(user == null || !request.isWitness(user))
                 handler.clientAction(response);
 
             else

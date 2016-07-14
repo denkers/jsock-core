@@ -7,17 +7,12 @@
 package com.kyleruss.jsockchat.server.io;
 
 import com.kyleruss.jsockchat.commons.io.MessageListener;
-import com.kyleruss.jsockchat.commons.message.AcceptFriendMsgBean;
-import com.kyleruss.jsockchat.commons.message.AuthMsgBean;
 import com.kyleruss.jsockchat.commons.message.BroadcastMsgBean;
 import com.kyleruss.jsockchat.commons.message.CreateRoomMsgBean;
 import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
 import com.kyleruss.jsockchat.commons.message.JoinRoomMsgBean;
 import com.kyleruss.jsockchat.commons.message.MessageBean;
 import com.kyleruss.jsockchat.commons.message.PrivateMsgBean;
-import com.kyleruss.jsockchat.commons.message.RegisterMsgBean;
-import com.kyleruss.jsockchat.commons.message.RemoveFriendMsgBean;
-import com.kyleruss.jsockchat.commons.message.RequestFriendMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;

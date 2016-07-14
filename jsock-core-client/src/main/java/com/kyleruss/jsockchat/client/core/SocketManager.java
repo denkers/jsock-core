@@ -22,6 +22,7 @@ public class SocketManager
     private Socket tcpSocket;
     private DatagramSocket udpSocket;
     private ObjectOutputStream tcpOutputStream;
+    private String userID;
 
     private SocketManager() {}
     
@@ -98,6 +99,23 @@ public class SocketManager
     public DatagramSocket getUdpSocket()
     {
         return udpSocket;
+    }
+    
+    public String getUserID()
+    {
+        return userID;
+    }
+    
+    public String getActiveUser()
+    {
+        if(userID == null)
+            return tcpSocket.getRemoteSocketAddress().toString();
+        else return userID;
+    }
+    
+    public void setUserID(String userID)
+    {
+        this.userID =   userID;
     }
     
     public static SocketManager getInstance()

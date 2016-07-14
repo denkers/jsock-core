@@ -9,9 +9,6 @@ package com.kyleruss.jsockchat.client.core;
 import com.kyleruss.jsockchat.client.io.ClientMessageListener;
 import com.kyleruss.jsockchat.client.io.ClientMessageSender;
 import com.kyleruss.jsockchat.client.io.ListUpdateListener;
-import com.kyleruss.jsockchat.client.updatebean.FriendsUpdateBeanHandler;
-import com.kyleruss.jsockchat.client.updatebean.RoomsUpdateBeanHandler;
-import com.kyleruss.jsockchat.client.updatebean.UsersUpdateBeanHandler;
 import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
 import com.kyleruss.jsockchat.commons.message.MessageBean;
 import com.kyleruss.jsockchat.commons.message.MessageQueueItem;
@@ -63,18 +60,14 @@ public class ClientManager
      */
     public void handleUpdates(UpdateBeanDump update)
     {
+        /*init update beans and perform their actions
+        
         Thread updateThread =   new Thread(()->
         {
-            FriendsUpdateBeanHandler friendsHandler =   new FriendsUpdateBeanHandler(update.getFriendsBean());
-            RoomsUpdateBeanHandler roomsHandler     =   new RoomsUpdateBeanHandler(update.getRoomsBean());
-            UsersUpdateBeanHandler usersHandler     =   new UsersUpdateBeanHandler(update.getUsersBean());
-
-            usersHandler.beanAction();
-            roomsHandler.beanAction();
-            friendsHandler.beanAction();
+            
         });
         
-        updateThread.start();
+        updateThread.start(); */
     }
     
     /**
@@ -98,7 +91,7 @@ public class ClientManager
             try
             {
                 DisconnectMsgBean bean  =   new DisconnectMsgBean(DisconnectMsgBean.CLIENT_LOGOUT);
-                RequestMessage request  =   new RequestMessage(userManager.getActiveUser().getUsername(), bean);
+                RequestMessage request  =   new RequestMessage(SocketManager.getInstance().getActiveUser(), bean);
                 ClientManager.getInstance().sendRequest(request);
                 clearUpdates();
             }
@@ -120,9 +113,7 @@ public class ClientManager
     public void disconnectUser()
     {
         clearUpdates();
-        UserManager.getInstance().setActiveUser(null);
-        JOptionPane.showMessageDialog(null, "You have disconnected from the server", "Connection failed", JOptionPane.ERROR_MESSAGE);
-        
+        SocketManager.getInstance().setUserID(null);
     }
     
     /**
@@ -142,7 +133,7 @@ public class ClientManager
      */
     public void sendBean(MessageBean bean) throws IOException
     {
-        RequestMessage request  =   new RequestMessage(UserManager.getInstance().getActiveUser().getUsername(), bean);
+        RequestMessage request  =   new RequestMessage(SocketManager.getInstance().getActiveUser(), bean);
         sendRequest(request);
     }
 }
