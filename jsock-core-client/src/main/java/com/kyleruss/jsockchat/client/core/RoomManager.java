@@ -6,7 +6,6 @@
 
 package com.kyleruss.jsockchat.client.core;
 
-import com.kyleruss.jsockchat.client.gui.ChatHomePanel;
 import com.kyleruss.jsockchat.commons.message.CreateRoomMsgBean;
 import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
 import com.kyleruss.jsockchat.commons.message.JoinRoomMsgBean;
@@ -51,7 +50,6 @@ public class RoomManager
         catch(IOException e)
         {
             JOptionPane.showMessageDialog(null, "Failed to send join request", "Failed request", JOptionPane.ERROR_MESSAGE);
-            ChatHomePanel.getInstance().toggleJoinRoomProcessing(false);
         }
     }
     

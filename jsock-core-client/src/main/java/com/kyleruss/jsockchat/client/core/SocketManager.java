@@ -6,9 +6,6 @@
 
 package com.kyleruss.jsockchat.client.core;
 
-import com.kyleruss.jsockchat.client.gui.ClientMenuBar;
-import com.kyleruss.jsockchat.client.gui.ClientPanel;
-import com.kyleruss.jsockchat.client.gui.ConnectPanel;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.DatagramSocket;
@@ -32,7 +29,6 @@ public class SocketManager
     {
         Thread sockThread   =   new Thread(()->
         {
-            ConnectPanel connectView =   ClientPanel.getInstance().getConnectView();
             
             try
             {
@@ -40,22 +36,12 @@ public class SocketManager
                 udpSocket       =   new DatagramSocket();
                 tcpOutputStream =   null;
                 ClientManager.getInstance().startServers();
-                connectView.showProcessing(false);
-                ClientPanel.getInstance().changeView(ClientConfig.LOGIN_VIEW_CARD);
-                
-                ClientMenuBar menu  =   ClientMenuBar.getInstance();
-                menu.getItem("loginItem").setEnabled(true);
-                menu.getItem("registerItem").setEnabled(true);
-                menu.getItem("logoutItem").setEnabled(false);
-                menu.getItem("dcItem").setEnabled(true);
             }
         
             catch(IOException e)
             {
                 JOptionPane.showMessageDialog(null, "Failed to connect to server", "Connection failed", JOptionPane.ERROR_MESSAGE);
-                connectView.showProcessing(false);
             }
-            
         });
         
         sockThread.start();

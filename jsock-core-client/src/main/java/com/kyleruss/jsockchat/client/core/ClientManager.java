@@ -6,9 +6,6 @@
 
 package com.kyleruss.jsockchat.client.core;
 
-import com.kyleruss.jsockchat.client.gui.ChatHomePanel;
-import com.kyleruss.jsockchat.client.gui.ClientMenuBar;
-import com.kyleruss.jsockchat.client.gui.ClientPanel;
 import com.kyleruss.jsockchat.client.io.ClientMessageListener;
 import com.kyleruss.jsockchat.client.io.ClientMessageSender;
 import com.kyleruss.jsockchat.client.io.ListUpdateListener;
@@ -85,8 +82,6 @@ public class ClientManager
      */
     public void clearUpdates()
     {
-        UserManager.getInstance().setFriendsBean(null);
-        UserManager.getInstance().setUsersBean(null);
         RoomManager.getInstance().setRoomsBean(null);
     }
     
@@ -96,27 +91,15 @@ public class ClientManager
      */
     public void logoutUser()
     {
-        if(UserManager.getInstance().getActiveUser() == null) return;
         
         Thread thread   = new Thread(()->
         {
-            UserManager userManager =   UserManager.getInstance();
             
             try
             {
                 DisconnectMsgBean bean  =   new DisconnectMsgBean(DisconnectMsgBean.CLIENT_LOGOUT);
                 RequestMessage request  =   new RequestMessage(userManager.getActiveUser().getUsername(), bean);
                 ClientManager.getInstance().sendRequest(request);
-
-                ChatHomePanel.getInstance().removeAllChats();
-                userManager.setActiveUser(null);
-                
-                ClientMenuBar menu  =   ClientMenuBar.getInstance();
-                menu.getItem("loginItem").setEnabled(true);
-                menu.getItem("registerItem").setEnabled(true);
-                menu.getItem("logoutItem").setEnabled(false);
-                
-                ClientPanel.getInstance().changeView(ClientConfig.LOGIN_VIEW_CARD);
                 clearUpdates();
             }
             
@@ -136,19 +119,10 @@ public class ClientManager
      */
     public void disconnectUser()
     {
-        if(ClientPanel.getInstance().getCurrentView().equals(ClientConfig.CONNECT_VIEW_CARD))
-            return;
-        
         clearUpdates();
         UserManager.getInstance().setActiveUser(null);
         JOptionPane.showMessageDialog(null, "You have disconnected from the server", "Connection failed", JOptionPane.ERROR_MESSAGE);
-        ClientPanel.getInstance().changeView(ClientConfig.CONNECT_VIEW_CARD);
         
-        ClientMenuBar menu  =   ClientMenuBar.getInstance();
-        menu.getItem("loginItem").setEnabled(false);
-        menu.getItem("registerItem").setEnabled(false);
-        menu.getItem("logoutItem").setEnabled(false);
-        menu.getItem("dcItem").setEnabled(false);
     }
     
     /**
@@ -170,11 +144,5 @@ public class ClientManager
     {
         RequestMessage request  =   new RequestMessage(UserManager.getInstance().getActiveUser().getUsername(), bean);
         sendRequest(request);
-    }
-    
-    public static void main(String[] args)
-    {
-        ClientGUIManager gui  =  ClientGUIManager.getInstance();
-        gui.display();
     }
 }
