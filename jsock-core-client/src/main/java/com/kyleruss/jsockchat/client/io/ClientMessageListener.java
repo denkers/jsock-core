@@ -12,7 +12,6 @@ import com.kyleruss.jsockchat.commons.io.MessageListener;
 import com.kyleruss.jsockchat.commons.message.MessageBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
-import com.kyleruss.jsockchat.commons.user.IUser;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;

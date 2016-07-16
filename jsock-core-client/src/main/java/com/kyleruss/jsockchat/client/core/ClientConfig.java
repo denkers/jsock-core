@@ -9,7 +9,7 @@ package com.kyleruss.jsockchat.client.core;
 public class ClientConfig 
 {
     //---------------------------------------------------------
-    //  IO CONSTS
+    //  IO CONFIG
     //---------------------------------------------------------
     public static int UPDATE_LIST_PORT      =   8891;
     public static int MSG_SERVER_PORT       =   8890;
