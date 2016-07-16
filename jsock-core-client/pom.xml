@@ -13,8 +13,8 @@
 
 	<dependencies>
 		 <dependency>
-		  	<groupId>com.kyleruss.jsockchat</groupId>
-			<artifactId>jsockchat-commons</artifactId>
+		  	<groupId>com.kyleruss.jsock</groupId>
+			<artifactId>jsock-core-commons</artifactId>
 			<version>1.0</version>
 		</dependency>
 	</dependencies>

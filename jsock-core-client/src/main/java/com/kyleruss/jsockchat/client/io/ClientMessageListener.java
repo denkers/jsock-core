@@ -8,7 +8,9 @@ package com.kyleruss.jsockchat.client.io;
 
 import com.kyleruss.jsockchat.client.core.SocketManager;
 import com.kyleruss.jsockchat.client.message.ClientMessageHandler;
+import com.kyleruss.jsockchat.commons.io.MessageHandler;
 import com.kyleruss.jsockchat.commons.io.MessageListener;
+import com.kyleruss.jsockchat.commons.message.ActionHandler;
 import com.kyleruss.jsockchat.commons.message.MessageBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
@@ -19,7 +21,7 @@ import java.net.Socket;
 /**
  * A server that listens and handles server response messages
  */
-public class ClientMessageListener extends MessageListener<ResponseMessage>
+public class ClientMessageListener extends MessageListener<ResponseMessage> implements MessageHandler
 {
     public ClientMessageListener(Socket socket) 
     {
@@ -30,10 +32,10 @@ public class ClientMessageListener extends MessageListener<ResponseMessage>
      * @param bean The request bean
      * @return An appropriate handler for the passed bean
      */
-    private ClientMessageHandler getHandler(MessageBean bean)
+    @Override
+    public ActionHandler getHandler(MessageBean bean)
     {
         ClientMessageHandler handler    =   null;   
-        
         return handler;
     }
     
@@ -48,7 +50,7 @@ public class ClientMessageListener extends MessageListener<ResponseMessage>
         RequestMessage request          =   response.getRequestMessage();
         MessageBean bean                =   request.getMessageBean();
         String user                     =   SocketManager.getInstance().getActiveUser();
-        ClientMessageHandler handler    =   getHandler(bean);
+        ClientMessageHandler handler    =   (ClientMessageHandler) getHandler(bean);
         
         if(handler != null)
         {
