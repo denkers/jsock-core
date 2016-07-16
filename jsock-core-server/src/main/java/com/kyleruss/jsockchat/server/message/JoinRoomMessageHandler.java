@@ -6,7 +6,9 @@
 
 package com.kyleruss.jsockchat.server.message;
 
+import com.kyleruss.jsockchat.commons.message.ActionHandler;
 import com.kyleruss.jsockchat.commons.message.JoinRoomMsgBean;
+import com.kyleruss.jsockchat.commons.message.Message;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
 import com.kyleruss.jsockchat.commons.room.Room;
@@ -17,11 +19,12 @@ import java.io.IOException;
 import java.util.List;
 
 
-public class JoinRoomMessageHandler implements ServerMessageHandler
+public class JoinRoomMessageHandler implements ActionHandler
 {
     @Override
-    public void serverAction(RequestMessage request) 
+    public void performAction(Message message)
     {
+        RequestMessage request      =   (RequestMessage) message;
         JoinRoomMsgBean bean        =   (JoinRoomMsgBean) request.getMessageBean();
         String source               =   request.getUserSource();
         String roomName             =   bean.getRoom();

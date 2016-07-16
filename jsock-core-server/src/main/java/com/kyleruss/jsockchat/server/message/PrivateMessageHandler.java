@@ -6,6 +6,8 @@
 
 package com.kyleruss.jsockchat.server.message;
 
+import com.kyleruss.jsockchat.commons.message.ActionHandler;
+import com.kyleruss.jsockchat.commons.message.Message;
 import com.kyleruss.jsockchat.commons.message.PrivateMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
@@ -13,11 +15,12 @@ import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
 import java.io.IOException;
 
-public class PrivateMessageHandler implements ServerMessageHandler
+public class PrivateMessageHandler implements ActionHandler
 {
     @Override
-    public void serverAction(RequestMessage request) 
+    public void performAction(Message message) 
     {
+        RequestMessage request      =   (RequestMessage) message;
         PrivateMsgBean bean         =   (PrivateMsgBean) request.getMessageBean();
         String destinationUser      =   bean.getDestinationUser();
         String source               =   request.getUserSource();

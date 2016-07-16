@@ -6,18 +6,21 @@
 
 package com.kyleruss.jsockchat.server.message;
 
+import com.kyleruss.jsockchat.commons.message.ActionHandler;
 import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
+import com.kyleruss.jsockchat.commons.message.Message;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
 import com.kyleruss.jsockchat.server.core.RoomManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
 import java.util.List;
 
-public class DisconnectMessageHandler implements ServerMessageHandler
+public class DisconnectMessageHandler implements ActionHandler
 {
     @Override
-    public void serverAction(RequestMessage request) 
+    public void performAction(Message message) 
     {
+        RequestMessage request      =   (RequestMessage) message;
         String source               =   request.getUserSource();
         DisconnectMsgBean bean      =   (DisconnectMsgBean) request.getMessageBean();
         ResponseMessage response    =   new ResponseMessage(request);

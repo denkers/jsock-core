@@ -6,7 +6,9 @@
 
 package com.kyleruss.jsockchat.server.io;
 
+import com.kyleruss.jsockchat.commons.io.MessageHandler;
 import com.kyleruss.jsockchat.commons.io.MessageListener;
+import com.kyleruss.jsockchat.commons.message.ActionHandler;
 import com.kyleruss.jsockchat.commons.message.BroadcastMsgBean;
 import com.kyleruss.jsockchat.commons.message.CreateRoomMsgBean;
 import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
@@ -21,7 +23,6 @@ import com.kyleruss.jsockchat.server.message.CreateRoomMessageHandler;
 import com.kyleruss.jsockchat.server.message.DisconnectMessageHandler;
 import com.kyleruss.jsockchat.server.message.JoinRoomMessageHandler;
 import com.kyleruss.jsockchat.server.message.PrivateMessageHandler;
-import com.kyleruss.jsockchat.server.message.ServerMessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -40,6 +41,7 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
     public ServerMessageListener(Socket socket) 
     {
         super(socket);
+        setMessageHandler(new ServerMessageHandler());
         initUserSocket();
     }
     
@@ -67,33 +69,9 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
         this.servingUser    =   servingUser;
     }
     
-    /**
-     * Interprets a passed MessageBean and creates a handler based on the type of bean
-     * @param bean The bean that's type is associated with a handler
-     * @return A handler thats associated with the passed bean; null otherwise
-     */
-    private ServerMessageHandler getHandler(MessageBean bean)
+    public MessageHandler getDefaultMessageHandler()
     {
-        ServerMessageHandler handler    =   null;
-            
-        
-        if(bean instanceof DisconnectMsgBean)
-            handler     =   new DisconnectMessageHandler();
-        
-        else if(bean instanceof JoinRoomMsgBean)
-            handler     =   new JoinRoomMessageHandler();
-        
-        else if(bean instanceof PrivateMsgBean)
-            handler     =   new PrivateMessageHandler();
-        
-        else if(bean instanceof BroadcastMsgBean)
-            handler     =   new BroadcastMessageHandler();
-        
-        else if(bean instanceof CreateRoomMsgBean)
-            handler     =   new CreateRoomMessageHandler();
-        
-        
-        return handler;
+        return new ServerMessageHandler();
     }
     
     /**
@@ -115,11 +93,11 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
                 servingUser     =   address;
             }
             
-            MessageBean bean                =   request.getMessageBean();
-            ServerMessageHandler handler    =   getHandler(bean);
+            MessageBean bean            =   request.getMessageBean();
+            ActionHandler handler       =   getActionHandler(bean);
             
             
-            if(handler != null) handler.serverAction(request);
+            if(handler != null) handler.performAction(request);
         }
     }
 
@@ -164,6 +142,39 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
         {
             LoggingManager.log("[ServerMessageListener@handleCleanup]: " + e.getMessage());
         }
+    }
+    
+    private class ServerMessageHandler implements MessageHandler
+    {
+        /**
+        * Interprets a passed MessageBean and creates a handler based on the type of bean
+        * @param bean The bean that's type is associated with a handler
+        * @return A handler thats associated with the passed bean; null otherwise
+        */
+         @Override
+         public ActionHandler getActionHandler(MessageBean bean)
+         {
+             ActionHandler handler    =   null;
+
+
+             if(bean instanceof DisconnectMsgBean)
+                 handler     =   new DisconnectMessageHandler();
+
+             else if(bean instanceof JoinRoomMsgBean)
+                 handler     =   new JoinRoomMessageHandler();
+
+             else if(bean instanceof PrivateMsgBean)
+                 handler     =   new PrivateMessageHandler();
+
+             else if(bean instanceof BroadcastMsgBean)
+                 handler     =   new BroadcastMessageHandler();
+
+             else if(bean instanceof CreateRoomMsgBean)
+                 handler     =   new CreateRoomMessageHandler();
+
+
+             return handler;
+         }
     }
     
     public static ServerMessageListener getInstance(Socket socket)
