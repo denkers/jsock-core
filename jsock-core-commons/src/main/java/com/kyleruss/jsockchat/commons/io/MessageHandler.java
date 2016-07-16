@@ -5,5 +5,5 @@ import com.kyleruss.jsockchat.commons.message.MessageBean;
 
 public interface MessageHandler 
 {
-    public ActionHandler getHandler(MessageBean bean);
+    public ActionHandler getActionHandler(MessageBean bean);
 }

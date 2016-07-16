@@ -44,4 +44,10 @@ public abstract class AbstractMessage implements Message
     {
         this.description    =   description;
     }
+    
+    @Override
+    public String toString()
+    {
+        return "[Message]\nTime sent: " + timeSent + "\nDescription: " + description;
+    }
 }

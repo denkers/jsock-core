@@ -21,24 +21,13 @@ import java.net.Socket;
 /**
  * A server that listens and handles server response messages
  */
-public class ClientMessageListener extends MessageListener<ResponseMessage> implements MessageHandler
+public class ClientMessageListener extends MessageListener<ResponseMessage>
 {
     public ClientMessageListener(Socket socket) 
     {
         super(socket);
     }
 
-    /**
-     * @param bean The request bean
-     * @return An appropriate handler for the passed bean
-     */
-    @Override
-    public ActionHandler getHandler(MessageBean bean)
-    {
-        ClientMessageHandler handler    =   null;   
-        return handler;
-    }
-    
     /**
      * Handles a response message
      * Uses appropriate action function based on witness status
@@ -50,12 +39,12 @@ public class ClientMessageListener extends MessageListener<ResponseMessage> impl
         RequestMessage request          =   response.getRequestMessage();
         MessageBean bean                =   request.getMessageBean();
         String user                     =   SocketManager.getInstance().getActiveUser();
-        ClientMessageHandler handler    =   (ClientMessageHandler) getHandler(bean);
+        ClientMessageHandler handler    =   (ClientMessageHandler) getActionHandler(bean);
         
         if(handler != null)
         {
             if(user == null || !request.isWitness(user))
-                handler.clientAction(response);
+                handler.performAction(response);
 
             else
                 handler.witnessAction(response); 

@@ -6,7 +6,10 @@
 
 package com.kyleruss.jsockchat.commons.io;
 
+import com.kyleruss.jsockchat.commons.message.ActionHandler;
+import com.kyleruss.jsockchat.commons.message.DefaultActionHandler;
 import com.kyleruss.jsockchat.commons.message.Message;
+import com.kyleruss.jsockchat.commons.message.MessageBean;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -16,13 +19,28 @@ import java.net.Socket;
  * Should handle messages based on their bean type
  * @param <T> client -> RequestMessage, server -> ResponseMessage
  */
-public abstract class MessageListener<T extends Message> extends Thread
+public abstract class MessageListener<T extends Message> extends Thread implements MessageHandler
 {
     protected final Socket socket;
+    protected MessageHandler messageHandler;
     
     public MessageListener(Socket socket)
     {
         this.socket =   socket;
+    }
+    
+    @Override
+    public ActionHandler getActionHandler(MessageBean bean)
+    {
+        if(messageHandler != null)
+            return messageHandler.getActionHandler(bean);
+        else 
+            return new DefaultActionHandler();
+    }
+    
+    public void setMessageHandler(MessageHandler messageHandler)
+    {
+        this.messageHandler =   messageHandler;
     }
     
     /**
@@ -59,7 +77,7 @@ public abstract class MessageListener<T extends Message> extends Thread
             T message;
             while((message = getMessage(inputStream)) != null)
             {
-                MessageHandler handler  =   new MessageHandler(message);
+                MessageRunner handler  =   new MessageRunner(message);
                 handler.start();
             }
             
@@ -73,11 +91,11 @@ public abstract class MessageListener<T extends Message> extends Thread
         }
     }
     
-    protected class MessageHandler extends Thread
+    protected class MessageRunner extends Thread
     {
         private final T message;
         
-        public MessageHandler(T message)
+        public MessageRunner(T message)
         {
             this.message    =   message;
         }
