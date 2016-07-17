@@ -25,7 +25,7 @@ public class ServerManager
     /**
      * Initializes and starts listening and send message servers as well as update the broadcast server
      */
-    private void startServers()
+    public void startServers()
     {
         MessageServer messageServer     =   MessageServer.getInstance();
         messageServer.start();
@@ -57,11 +57,5 @@ public class ServerManager
     {
         if(instance == null) instance = new ServerManager();
         return instance;
-    }
-    
-    public static void main(String[] args)
-    {
-        ServerManager manager   =   getInstance();
-        manager.startServers();
     }
 }
