@@ -6,8 +6,10 @@
 
 package com.kyleruss.jsockchat.server.io;
 
+import com.kyleruss.jsockchat.commons.io.MessageHandler;
 import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.ServerConfig;
+import com.kyleruss.jsockchat.server.message.DefaultMessageHandler;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -21,10 +23,12 @@ public final class MessageServer extends SyncedServer
 {
     private static MessageServer instance;
     private ServerSocket serverSocket;
+    private MessageHandler messageHandler;
     
     private MessageServer()
     {
         initSocket();
+        messageHandler  =   new DefaultMessageHandler();
     }
     
     /**
@@ -72,8 +76,14 @@ public final class MessageServer extends SyncedServer
      */
     private void handleClientSocket(Socket socket)
     {
-        ServerMessageListener messageHandler =   new ServerMessageListener(socket);
-        messageHandler.start();
+        ServerMessageListener messageListener =   new ServerMessageListener(socket);
+        messageListener.setMessageHandler(messageHandler);
+        messageListener.start();
+    }
+    
+    public void setMessageHandler(MessageHandler messageHandler)
+    {
+        this.messageHandler =   messageHandler;
     }
 
     @Override

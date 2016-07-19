@@ -8,9 +8,7 @@ package com.kyleruss.jsockchat.client.io;
 
 import com.kyleruss.jsockchat.client.core.SocketManager;
 import com.kyleruss.jsockchat.client.message.ClientMessageHandler;
-import com.kyleruss.jsockchat.commons.io.MessageHandler;
 import com.kyleruss.jsockchat.commons.io.MessageListener;
-import com.kyleruss.jsockchat.commons.message.ActionHandler;
 import com.kyleruss.jsockchat.commons.message.MessageBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;

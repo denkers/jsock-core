@@ -36,12 +36,16 @@ public class JoinRoomMessageHandler implements ActionHandler
         { 
             if(room == null)
             {
-                response.setStatus(false);
-                response.setDescription("Room does not exist");
+                room   =   new Room(roomName, false, null, false);
+                RoomManager.getInstance().add(roomName, room);
+                room.joinRoom(source);
+                
+                response.setStatus(true);
+                response.setDescription("You have connected to room: " + roomName);
                 SocketManager.getInstance().sendMessageToUser(source, response);
             }
             
-            else if(room.hasUser(source) || usersRooms.contains(roomName))
+            if(room.hasUser(source) || usersRooms.contains(roomName))
             {
                 response.setStatus(false);
                 response.setDescription("You are already connected to this room");

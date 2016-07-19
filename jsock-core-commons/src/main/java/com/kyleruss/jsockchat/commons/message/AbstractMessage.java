@@ -7,6 +7,8 @@
 package com.kyleruss.jsockchat.commons.message;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple bean used for maintaining message content and timestamps
@@ -16,11 +18,13 @@ public abstract class AbstractMessage implements Message
 {
     private Date timeSent;
     private String description;
+    private Map properties;
     
     public AbstractMessage()
     {
         timeSent    =   new Date();
         description =   "";
+        properties  =   new HashMap<>();
     }
     
     @Override
@@ -45,9 +49,35 @@ public abstract class AbstractMessage implements Message
         this.description    =   description;
     }
     
+    
+    
     @Override
     public String toString()
     {
         return "[Message]\nTime sent: " + timeSent + "\nDescription: " + description;
+    }
+
+    @Override
+    public Map getProperties()
+    {
+        return properties;
+    }
+
+    @Override
+    public Object getProperty(String propertyName) 
+    {
+        return properties.get(propertyName);
+    }
+
+    @Override
+    public void setProperty(String propertyName, Object propertyValue) 
+    {
+        properties.put(propertyName, propertyValue);
+    }
+
+    @Override
+    public void setProperties(Map properties) 
+    {
+        this.properties =   properties;
     }
 }

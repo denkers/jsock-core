@@ -6,24 +6,13 @@
 
 package com.kyleruss.jsockchat.server.io;
 
-import com.kyleruss.jsockchat.commons.io.MessageHandler;
 import com.kyleruss.jsockchat.commons.io.MessageListener;
 import com.kyleruss.jsockchat.commons.message.ActionHandler;
-import com.kyleruss.jsockchat.commons.message.BroadcastMsgBean;
-import com.kyleruss.jsockchat.commons.message.CreateRoomMsgBean;
-import com.kyleruss.jsockchat.commons.message.DisconnectMsgBean;
-import com.kyleruss.jsockchat.commons.message.JoinRoomMsgBean;
 import com.kyleruss.jsockchat.commons.message.MessageBean;
-import com.kyleruss.jsockchat.commons.message.PrivateMsgBean;
 import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
-import com.kyleruss.jsockchat.server.message.BroadcastMessageHandler;
-import com.kyleruss.jsockchat.server.message.CreateRoomMessageHandler;
 import com.kyleruss.jsockchat.server.message.DefaultMessageHandler;
-import com.kyleruss.jsockchat.server.message.DisconnectMessageHandler;
-import com.kyleruss.jsockchat.server.message.JoinRoomMessageHandler;
-import com.kyleruss.jsockchat.server.message.PrivateMessageHandler;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
@@ -61,7 +50,7 @@ public class ServerMessageListener extends MessageListener<RequestMessage>
             UserSocket userSocket       =   new UserSocket(socket);
             sockManager.add(address, userSocket);
             servingUser =   address;
-            LoggingManager.log("[Message Server] Serving new client '");
+            LoggingManager.log("[Message Server] Serving new client '" + address + "'");
         }
     }
     

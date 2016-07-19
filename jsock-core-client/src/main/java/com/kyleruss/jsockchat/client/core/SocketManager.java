@@ -26,7 +26,7 @@ public class SocketManager
 
     private SocketManager() {}
     
-    public void initSockets(String host, int port)
+    public synchronized Thread initSockets(String host, int port)
     {
         Thread sockThread   =   new Thread(()->
         {
@@ -46,6 +46,7 @@ public class SocketManager
         });
         
         sockThread.start();
+        return sockThread;
     }
     
     public int getUdpPort()

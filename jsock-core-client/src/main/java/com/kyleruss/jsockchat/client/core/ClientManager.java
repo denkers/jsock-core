@@ -16,6 +16,8 @@ import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.updatebean.UpdateBeanDump;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.JOptionPane;
 
 /**
@@ -46,6 +48,21 @@ public class ClientManager
         
         listUpdateListener = new ListUpdateListener(sockMgr.getUdpSocket());
         listUpdateListener.start();
+    }
+    
+    public ClientMessageListener getMessageListener()
+    {
+        return listener;
+    }
+    
+    public ClientMessageSender getMessageSender()
+    {
+        return sender;
+    }
+    
+    public ListUpdateListener getUpdateListener()
+    {
+        return listUpdateListener;
     }
     
     public static ClientManager getInstance()
@@ -133,7 +150,18 @@ public class ClientManager
      */
     public void sendBean(MessageBean bean) throws IOException
     {
-        RequestMessage request  =   new RequestMessage(SocketManager.getInstance().getActiveUser(), bean);
-        sendRequest(request);
+        sendBean(bean, new HashMap<>());
+    }
+    
+    public void sendBean(MessageBean bean, Map propertes) throws IOException
+    {
+        RequestMessage message  =   prepareMessage(bean);
+        message.setProperties(propertes);
+        sendRequest(message);
+    }
+    
+    public RequestMessage prepareMessage(MessageBean bean)
+    {
+        return new RequestMessage(SocketManager.getInstance().getActiveUser(), bean);
     }
 }

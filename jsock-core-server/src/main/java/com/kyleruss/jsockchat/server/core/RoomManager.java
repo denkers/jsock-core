@@ -40,7 +40,7 @@ public final class RoomManager extends AbstractManager<String, Room>
     private RoomManager() 
     {
         data    =   new LinkedHashMap<>();
-        initFixedRooms();
+        //initFixedRooms();
     }
     
     /**

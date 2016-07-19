@@ -21,7 +21,7 @@ import java.net.Socket;
  */
 public abstract class MessageListener<T extends Message> extends Thread implements MessageHandler
 {
-    protected final Socket socket;
+    protected Socket socket;
     protected MessageHandler messageHandler;
     
     public MessageListener(Socket socket)
