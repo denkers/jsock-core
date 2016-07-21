@@ -45,7 +45,7 @@ public class JoinRoomMessageHandler implements ActionHandler
                 SocketManager.getInstance().sendMessageToUser(source, response);
             }
             
-            if(room.hasUser(source) || usersRooms.contains(roomName))
+            else if(room.hasUser(source) || usersRooms.contains(roomName))
             {
                 response.setStatus(false);
                 response.setDescription("You are already connected to this room");

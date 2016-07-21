@@ -74,15 +74,12 @@ public abstract class MessageSender extends Thread
      */
    protected void sendMessage(Message message, ObjectOutputStream outputStream) 
    { 
-       System.out.println("sending messg");
         try 
         { 
             outputStream.writeObject(message); 
-            System.out.println("MESSAGE SENT: " + message);
         }
         catch(IOException e)
         {
-            System.out.println("Error failed to send message");
             String source   =   null;
             if(message instanceof RequestMessage)
                 source = ((RequestMessage) message).getUserSource();
