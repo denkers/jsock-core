@@ -75,7 +75,7 @@ public class SocketManager extends AbstractManager<String, UserSocket>
      */
     public synchronized void sendMessageToUser(String username, Message message) throws IOException
     {
-        UserSocket userSocket     =   SocketManager.getInstance().get(username);
+        UserSocket userSocket     =   get(username);
 
         if(userSocket != null)
         {

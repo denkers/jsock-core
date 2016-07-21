@@ -8,6 +8,7 @@ package com.kyleruss.jsockchat.commons.io;
 
 import com.kyleruss.jsockchat.commons.message.Message;
 import com.kyleruss.jsockchat.commons.message.MessageQueueItem;
+import com.kyleruss.jsockchat.commons.message.RequestMessage;
 import com.kyleruss.jsockchat.commons.message.ResponseMessage;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -71,14 +72,25 @@ public abstract class MessageSender extends Thread
      * @param message The message to be sent
      * @param outputStream The users current ouputStream to write to
      */
-    protected void sendMessage(Message message, ObjectOutputStream outputStream) 
-    { 
-        try { outputStream.writeObject(message); }
+   protected void sendMessage(Message message, ObjectOutputStream outputStream) 
+   { 
+       System.out.println("sending messg");
+        try 
+        { 
+            outputStream.writeObject(message); 
+            System.out.println("MESSAGE SENT: " + message);
+        }
         catch(IOException e)
         {
-            ResponseMessage response    =   (ResponseMessage) message;
-            String source               =   response.getRequestMessage().getUserSource();
-            cleanUp(source);
+            System.out.println("Error failed to send message");
+            String source   =   null;
+            if(message instanceof RequestMessage)
+                source = ((RequestMessage) message).getUserSource();
+
+            else if(message instanceof ResponseMessage)
+                source = ((ResponseMessage) message).getRequestMessage().getUserSource();
+
+            if(source != null) cleanUp(source);
         }
     }
     

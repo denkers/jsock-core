@@ -14,7 +14,7 @@
 	<dependencies>
 		 <dependency>
 		   	<groupId>com.kyleruss.jsock</groupId>
-			<artifactId>commons</artifactId>
+			<artifactId>jsock-core-commons</artifactId>
 			<version>1.0</version>
 		</dependency>
 

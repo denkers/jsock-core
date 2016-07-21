@@ -39,14 +39,14 @@ public class ClientManager
      */
     public void startServers()
     {
-        SocketManager sockMgr  =   SocketManager.getInstance();
-        listener    =   new ClientMessageListener(sockMgr.getTcpSocket());
+        SocketManager sockMgr  =    SocketManager.getInstance();
+        listener               =    new ClientMessageListener(sockMgr.getTcpSocket());
         listener.start();
         
-        sender      =   new ClientMessageSender();
+        sender                 =    new ClientMessageSender();
         sender.start();
         
-        listUpdateListener = new ListUpdateListener(sockMgr.getUdpSocket());
+        listUpdateListener     =    new ListUpdateListener(sockMgr.getUdpSocket());
         listUpdateListener.start();
     }
     
@@ -109,14 +109,14 @@ public class ClientManager
             {
                 DisconnectMsgBean bean  =   new DisconnectMsgBean(DisconnectMsgBean.CLIENT_LOGOUT);
                 RequestMessage request  =   new RequestMessage(SocketManager.getInstance().getActiveUser(), bean);
-                ClientManager.getInstance().sendRequest(request);
+                sendRequest(request);
                 clearUpdates();
-            }
+           }
             
-            catch(IOException e)
+           catch(IOException e)
             {
                 JOptionPane.showMessageDialog(null, "Failed to send logout request", "Logout request message", JOptionPane.ERROR_MESSAGE);
-            }
+            } 
             
         });
         
@@ -162,6 +162,7 @@ public class ClientManager
     
     public RequestMessage prepareMessage(MessageBean bean)
     {
-        return new RequestMessage(SocketManager.getInstance().getActiveUser(), bean);
+        String id   =   SocketManager.getInstance().getActiveUser();
+        return new RequestMessage(id, bean);
     }
 }

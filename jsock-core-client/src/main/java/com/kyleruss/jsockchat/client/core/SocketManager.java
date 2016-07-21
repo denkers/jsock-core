@@ -26,27 +26,20 @@ public class SocketManager
 
     private SocketManager() {}
     
-    public synchronized Thread initSockets(String host, int port)
+    public synchronized void initSockets(String host, int port)
     {
-        Thread sockThread   =   new Thread(()->
+        try
         {
-            
-            try
-            {
-                tcpSocket       =   new Socket(host, port);
-                udpSocket       =   new DatagramSocket();
-                tcpOutputStream =   null;
-                ClientManager.getInstance().startServers();
-            }
-        
-            catch(IOException e)
-            {
-                JOptionPane.showMessageDialog(null, "Failed to connect to server", "Connection failed", JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        
-        sockThread.start();
-        return sockThread;
+            tcpSocket       =   new Socket(host, port);
+            udpSocket       =   new DatagramSocket();
+            tcpOutputStream =   null;
+            ClientManager.getInstance().startServers();
+        }
+
+        catch(IOException e)
+        {
+            JOptionPane.showMessageDialog(null, "Failed to connect to server", "Connection failed", JOptionPane.ERROR_MESSAGE);
+        }
     }
     
     public int getUdpPort()
@@ -110,7 +103,7 @@ public class SocketManager
     public String getActiveUser()
     {
         if(userID == null)
-            return tcpSocket.getRemoteSocketAddress().toString();
+            return tcpSocket.getLocalSocketAddress().toString();
         else return userID;
     }
     
