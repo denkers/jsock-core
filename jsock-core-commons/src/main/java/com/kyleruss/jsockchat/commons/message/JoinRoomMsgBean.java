@@ -6,7 +6,7 @@
 
 package com.kyleruss.jsockchat.commons.message;
 
-public class JoinRoomMsgBean implements MessageBean
+public class JoinRoomMsgBean implements RoomBean
 {
     private String room;
     private String attemptedPassword;
@@ -17,6 +17,7 @@ public class JoinRoomMsgBean implements MessageBean
         this.attemptedPassword      =   password;
     }
 
+    @Override
     public String getRoom() 
     {
         return room;

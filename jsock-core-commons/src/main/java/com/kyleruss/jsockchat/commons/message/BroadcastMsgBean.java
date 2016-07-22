@@ -6,7 +6,7 @@
 
 package com.kyleruss.jsockchat.commons.message;
 
-public class BroadcastMsgBean implements MessageBean
+public class BroadcastMsgBean implements RoomBean
 {
     private String room;
     private String content;

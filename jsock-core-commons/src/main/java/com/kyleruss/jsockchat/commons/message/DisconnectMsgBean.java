@@ -7,7 +7,7 @@
 
 package com.kyleruss.jsockchat.commons.message;
 
-public class DisconnectMsgBean implements MessageBean
+public class DisconnectMsgBean implements RoomBean
 {
     public static final int ROOM_LEAVE      =   0;
     public static final int CLIENT_LOGOUT   =   1;
