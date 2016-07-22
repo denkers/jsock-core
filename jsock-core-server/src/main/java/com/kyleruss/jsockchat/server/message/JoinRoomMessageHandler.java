@@ -16,6 +16,7 @@ import com.kyleruss.jsockchat.server.core.LoggingManager;
 import com.kyleruss.jsockchat.server.core.RoomManager;
 import com.kyleruss.jsockchat.server.core.SocketManager;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,13 +64,21 @@ public class JoinRoomMessageHandler implements ActionHandler
                  
                  else
                  {
-                     room.joinRoom(source);
+                    room.joinRoom(source);
+
+                    response.setStatus(true);
+                    response.setDescription(source + " (" + source + ") has joined the room");
+
+                    List<String> exclusions    =   new ArrayList<>();
+                    exclusions.add(source);
+                    RoomManager.getInstance().sendMessageToRoom(roomName, response, exclusions);
+
+                    ResponseMessage directResponse    =   new ResponseMessage(request);
+                    directResponse.setStatus(true);
+                    directResponse.setDescription("You have connected to room: " + roomName);
+                    SocketManager.getInstance().sendMessageToUser(source, directResponse);
                      
-                     response.setStatus(true);
-                     response.setDescription(source + " (" + source + ") has joined the room");
-                     RoomManager.getInstance().sendMessageToRoom(roomName, response, null);
-                     
-                     LoggingManager.log("[Join room] User '" + source + "' has joined room '" + roomName + "'");
+                    LoggingManager.log("[Join room] User '" + source + "' has joined room '" + roomName + "'");
                  }
             }
         }
