@@ -63,7 +63,7 @@ public class SocketManager extends AbstractManager<String, UserSocket>
         
         LoggingManager.log("[User manager] User '" + client + "' has exited");
         
-        RoomManager.getInstance().leaveAllRooms(client);
+        RoomManager.getInstance().leaveAllRooms(client, null);
         cleanUp(client);
     }
     

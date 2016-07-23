@@ -32,12 +32,12 @@ public class DisconnectMessageHandler implements ActionHandler
         if(bean.getDisconnectType() == DisconnectMsgBean.ROOM_LEAVE)
         {
             String roomName   =   bean.getRoom();
-            roomManager.leaveRoom(source, roomName);
+            roomManager.leaveRoom(source, roomName, request);
         }
         
         else
         {
-            roomManager.leaveAllRooms(source);
+            roomManager.leaveAllRooms(source, request);
             
             List<String> rooms  =   roomManager.getUsersRooms(source);
             for(String roomName : rooms)

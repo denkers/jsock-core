@@ -120,13 +120,12 @@ public final class RoomManager extends AbstractManager<String, Room>
      * @param user The user to remove from the room
      * @param roomName The room to remove user from
      */
-    public synchronized void leaveRoom(String user, String roomName)
+    public synchronized void leaveRoom(String user, String roomName, RequestMessage preRequest)
     {
         if(find(roomName))
         {
             LoggingManager.log("[Room manager] User '" + user + "' has left room '" + roomName + "'");
             
-            //user.getCurrentRooms().remove(roomName);
             Room room   =   get(roomName);
             room.leaveRoom(user);
             
@@ -138,9 +137,13 @@ public final class RoomManager extends AbstractManager<String, Room>
             
             else
             {
-                DisconnectMsgBean bean      =   new DisconnectMsgBean(DisconnectMsgBean.ROOM_LEAVE);
+                DisconnectMsgBean bean   =   new DisconnectMsgBean(DisconnectMsgBean.ROOM_LEAVE);
                 bean.setRoom(room.getRoomName());
-                RequestMessage request      =   new RequestMessage(user, bean);
+                RequestMessage request  =   new RequestMessage(user, bean);
+                
+                if(preRequest != null)
+                    request.setProperties(preRequest.getProperties());
+                
                 ResponseMessage response    =   new ResponseMessage(request);
                 sendMessageToRoom(room.getRoomName(), response, createExclusions(user));
                 
@@ -149,17 +152,18 @@ public final class RoomManager extends AbstractManager<String, Room>
         }
     }
     
+    
     /**
      * Removes the user from all rooms its involved in
      * @param user The user that's going to leave all their rooms
      */
-    public synchronized void leaveAllRooms(String user)
+    public synchronized void leaveAllRooms(String user, RequestMessage preRequest)
     {
         List<String> usersRoomList  =   getUsersRooms(user);
         Object[] currentRooms   =    usersRoomList.toArray();
         
         for(Object room : currentRooms)
-            leaveRoom(user, room.toString());
+            leaveRoom(user, room.toString(), preRequest);
     }
     
     /**
