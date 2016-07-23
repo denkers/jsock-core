@@ -1,7 +1,7 @@
 //========================================
 //  Kyle Russell
 //  AUT University 2016
-//  Distributed & Mobile Systems
+//  github.com/denkers/jsock-core
 //========================================
 
 package com.kyleruss.jsockchat.server.io;
@@ -18,9 +18,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * A server that periodically pushes updates via UDP to clients

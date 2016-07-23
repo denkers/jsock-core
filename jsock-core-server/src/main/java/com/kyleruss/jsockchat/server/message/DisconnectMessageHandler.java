@@ -1,7 +1,7 @@
 //========================================
 //  Kyle Russell
 //  AUT University 2016
-//  Distributed & Mobile Systems
+//  github.com/denkers/jsock-core
 //========================================
 
 package com.kyleruss.jsockchat.server.message;
