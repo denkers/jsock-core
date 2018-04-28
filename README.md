@@ -6,6 +6,15 @@ JSock Core is a client-server message passing library that simplifies TCP/UDP co
 The motivation for JSock Core was to remove the complexity of socket communication and allow  
 developers to create stunning realtime applications with ease
 
+### Features
+- Socket listening
+- Message sending
+- Update broadcasting
+- Channels
+- Connected client and channel management
+- Comprehensive client & server logging
+- Highly configurable 
+
 ### Projects using JSock Core
 - [hcipher-chat](https://github.com/kyleruss/hcipher-chat)
 - [jsock-chat](https://github.com/kyleruss/jsock-chat)
